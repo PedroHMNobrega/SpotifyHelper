@@ -1,0 +1,15 @@
+Spotify Saver
+
+Justificativa do Negócio:
+	1- App para salvar o nome das músicas e playlists da conta do spotify
+	2- Quero poder fazer um backup das minhas músicas favoritas
+
+Visão do Projeto:
+	- Desenvolver um app que acesse a API do spotify, pegue os dados de todas as músicas da minha
+	conta do spotify e salve essas músicas em um arquivo CSV
+	- Dessa forma consigo evitar a perda das minha músicas favoritas, em caso de cancelamento do spotify
+	ou até mesmo falência da empresa.
+	- Principais Funcionalidades:
+		- Acessar a API do spotify e pegar os dados das minha músicas
+		- Salvar os dados em um arquivo CSV
+		- Pode ser usado para qualquer conta spotify
