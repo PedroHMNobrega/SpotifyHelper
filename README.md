@@ -6,7 +6,7 @@ Features
 The basic features of Spotify Helper are:
 
 - List all the tracks of an artist, sorted by popularity.
-- Save your Spotify saved tracks to a CSV file.
+- Save user's saved tracks to a CSV file.
 
 Setting up Project
 ------------------
