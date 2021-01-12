@@ -16,4 +16,4 @@ $ git clone https://github.com/PedroHMNobrega/SpotifyHelper.git
 ```
 
 2. **Set Up Environment Variables**
-Add your Spotify ClientToken and ClientSecret in the Config.java file.
+- Add your Spotify ClientToken and ClientSecret in the Config.java file.
