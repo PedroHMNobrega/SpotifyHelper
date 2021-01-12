@@ -1,17 +1,12 @@
-package main;
+package backup;
 
-import java.awt.Desktop;
-import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,13 +14,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import utils.Track;
+
 /**
- * Class with all the app functions.
+ * Class with all the backup functions.
  * 
  * @author Pedro Nóbrega
  *
  */
-public class Functions {
+public class BackupFunctions {
 	
 	/**
 	 * Get an array with all the user's Spotify saved tracks.
@@ -34,7 +31,7 @@ public class Functions {
 	 * @throws Exception
 	 */
 	public ArrayList<Track> getTrackList(String accessToken) throws Exception {
-		Request request = new Request(accessToken);
+		RequestBackup request = new RequestBackup(accessToken);
 		JSONArray tracks = request.getTracksRaw();
 		ArrayList<Track> trackList = new ArrayList<>();
 		
@@ -47,8 +44,9 @@ public class Functions {
 			String previewUrl = track.get("preview_url").toString();
 			int duration = (int)track.get("duration_ms");
 			int popularity = (int)track.get("popularity");
+			String uri = track.get("uri").toString();
 			
-			Track music = new Track(name, id, album, artists, previewUrl, duration, popularity);
+			Track music = new Track(name, id, album, artists, previewUrl, duration, popularity, uri);
 			trackList.add(music);
 		}
 		
@@ -56,7 +54,7 @@ public class Functions {
 	}
 	
 	/**
-	 * Converts a JSONArray to an String array.
+	 * Converts a JSONArray to a String array.
 	 * 
 	 * @param artistList
 	 * @return the string array.
@@ -68,37 +66,6 @@ public class Functions {
 			artists[i] = artist.getString("name");
 		}
 		return artists;
-	}
-	
-	/**
-	 * Get a image from its path.
-	 * 
-	 * @param src
-	 * @return
-	 */
-	public Image getIconImage(String src) {
-		Image img = null;
-		try {
-			img = ImageIO.read(getClass().getResource(src));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		return img;
-	}
-	
-	/**
-	 * Open the user's browser and redirect to the Spotify authentication URL.
-	 */
-	public void browserRedirect(String url) {
-		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-		    try {
-				Desktop.getDesktop().browse(new URI(url));
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (URISyntaxException e1) {
-				e1.printStackTrace();
-			}
-		}
 	}
 	
 	/**
@@ -131,6 +98,7 @@ public class Functions {
 	private File saveAs(JFrame frame) {
 		JFileChooser fc = new JFileChooser() {
 			private static final long serialVersionUID = 1L;
+			
 			@Override
 			public void approveSelection() {				
 				File f = new File(fileExtensionToCSV(getSelectedFile().getAbsolutePath()));
@@ -173,7 +141,7 @@ public class Functions {
 	 * @return the CSV string
 	 */
 	public String trackListToCSV(ArrayList<Track> trackList) {
-		String csv = "Name\tAlbum\tArtists\tPreview URL\tDuration(ms)\tPopularity\tId\n";
+		String csv = "Name\tAlbum\tArtists\tPreview URL\tURI\tDuration(ms)\tPopularity\tId\n";
 		for(int i = 0; i < trackList.size(); i++) {
 			csv += trackList.get(i).toCSV();
 			csv += "\n";
@@ -190,6 +158,7 @@ public class Functions {
 	public File getFile(JFrame frame) {
 		JFileChooser fc = new JFileChooser() {
 			private static final long serialVersionUID = 1L;
+			
 			@Override
 			public void approveSelection() {
 				File f = getSelectedFile();
@@ -213,8 +182,8 @@ public class Functions {
 	}
 	
 	/**
-	 * Get the differences between the current trackList and the backUp trackList chose by the user.
-	 * Returns a HashMap with two keys "new" and "removed", each key points to an ArrayList with the 
+	 * Get the differences between the current trackList and the backUp trackList chosen by the user.
+	 * Returns a HashMap with two keys, "new" and "removed", each key points to an ArrayList with the 
 	 * new and removed tracks respectively.
 	 * 
 	 * @param file
@@ -268,12 +237,14 @@ public class Functions {
 	 */
 	private boolean validFile(File file) {
 		try {
+			int numberOfColumns = 8;
+			
 			BufferedReader csvReader = new BufferedReader(new FileReader(file.getAbsolutePath()));
 			String row;
 			int cnt = 0;
 			while((row = csvReader.readLine()) != null) {
 				String[] data = row.split("\t");
-				if(data.length != 7) {
+				if(data.length != numberOfColumns) {
 					csvReader.close();
 					return false;
 				}
@@ -303,8 +274,8 @@ public class Functions {
 				String[] data = row.split("\t");
 				String[] artists = data[2].split("\\|");
 				for(int i = 0; i < artists.length; i++) artists[i] = artists[i].trim();
-				Track track = new Track(data[0], data[6], data[1], artists, data[3], 
-						Integer.parseInt(data[4]), Integer.parseInt(data[5]));
+				Track track = new Track(data[0], data[7], data[1], artists, data[3], 
+						Integer.parseInt(data[5]), Integer.parseInt(data[6]), data[4]);
 				tracks.add(track);
 			}
 			csvReader.close();

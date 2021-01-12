@@ -1,19 +1,18 @@
-package main;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+package backup;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import utils.Functions;
+
 /**
- * Request is used to make HTTP requests to Spotify API.
+ * RequestBackup is used to make HTTP requests to Spotify API.
  * 
  * @author Pedro Nóbrega
  *
  */
-public class Request {
+public class RequestBackup {
 	/**
 	 * User access token, used to authentication. 
 	 */
@@ -25,7 +24,7 @@ public class Request {
 	 * 
 	 * @param accessToken
 	 */
-	public Request(String accessToken) {
+	public RequestBackup(String accessToken) {
 		this.accessToken = accessToken;
 	}
 	
@@ -55,9 +54,9 @@ public class Request {
 		connection.setRequestMethod("GET");
 		
 		if(connection.getResponseCode() != 200) 
-			throw new RuntimeException("Falha: Erro " + connection.getResponseCode());
+			throw new RuntimeException("Error " + connection.getResponseCode());
 		
-		String jsonText = responseToString(connection);		
+		String jsonText = Functions.responseToString(connection);		
 		connection.disconnect();
 		
 		JSONObject json = new JSONObject(jsonText);
@@ -67,24 +66,9 @@ public class Request {
 			tracks.put(item.get("track"));			
 		}
 		
-		if(json.get("next").toString() != "null" && !test) 
+		if(!(json.get("next").toString()).equals("null") && !test) 
 			this.getTracksRaw(json.get("next").toString(), tracks);
 		
 		return tracks;
-	}
-	
-	/**
-	 * Converts the request response to a String.
-	 * 
-	 * @param connection
-	 * @return the response string
-	 * @throws IOException
-	 */
-	private String responseToString(HttpURLConnection connection) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
-		String output;
-		StringBuffer response = new StringBuffer();
-		while((output = br.readLine()) != null) response.append(output); 
-		return response.toString();
 	}
 }

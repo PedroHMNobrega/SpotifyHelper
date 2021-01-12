@@ -40,9 +40,39 @@ foram adicionadas e removidas.
 		- Pegar o arquivo de backup salvo (2)
 		- Comparar o arquivo com os dados atuais e exibir na tela (2)
 
+
+4 - Como um usuário eu gostaria de poder listar todas as músicas de um artista por ordem de popularidade, então eu vou poder escolher as
+minhas músicas favoritas do artista.
+	- Media
+	- Critério de Aceitação:
+		- Campo para pesquisar artista
+		- Listar artistas encontrados (Exibir a popularidade do aritista tambem)
+		- Possibilidade de seleção do artista
+		- Listar na tela todas as músicas do artista listada por popularidade 
+			- Exibir a popularidade do aritista
+			- Todas as músicas com nome, popularidade e uri Spotify
+		- Possibilidade de salvar em um arquivo
+	- Tarefas:
+		- Criar menu com a opção de escolher entre backup e listar musicas (1)
+		- Conseguir o token de autenticação (1)
+		- Ler busca do usário e exibir na tela o resultado (Com a opção de clicar no artista escolhido) (5)
+		- Buscar todas as músicas do artista e listar em ordem de popularidade: (3)
+			- Pegar id do artista escolhido
+			- Buscar albuns desse artista
+			- Para cada album pegar todas as músicas do album e salvar em um array
+			- Ordenar as músicas
+			- Exibir as músicas em tela
+			- Botão para salvar as músicas em um arquivo txt
+		
 - Aprendizados:
 	- Não usar thread em GUI, usar o swingworker
 	- Fazer http request
-	- Usar interface gráfica em java
+	- Usar interface gráfica em java (GUI)
 	- Salvar e abrir arquivos	
-		
+	- Encode e decode Base64
+	
+	
+	
+	
+	
+	

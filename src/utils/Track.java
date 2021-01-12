@@ -1,4 +1,4 @@
-package main;
+package utils;
 
 /**
  * Representation of a track.
@@ -6,11 +6,12 @@ package main;
  * @author Pedro Nóbrega
  *
  */
-public class Track {
+public class Track implements Comparable<Track> {
 	private String name;
 	private String id;
 	private String album;
 	private String[] artist;
+	private String uri;
 	
 	/**
 	 * The url to a 30 seconds track preview.
@@ -37,9 +38,10 @@ public class Track {
 	 * @param previewUrl
 	 * @param duration
 	 * @param popularity
+	 * @param uri
 	 */
 	public Track(String name, String id, String album, String[] artist, String previewUrl, 
-			int duration, int popularity) {
+			int duration, int popularity, String uri) {
 		this.name = removeTabs(name);
 		this.id = removeTabs(id);
 		this.album = removeTabs(album);
@@ -47,6 +49,7 @@ public class Track {
 		this.previewUrl = removeTabs(previewUrl);
 		this.duration = duration;
 		this.popularity = popularity;
+		this.uri = uri;
 	}
 	
 	/**
@@ -149,13 +152,22 @@ public class Track {
 	}
 	
 	/**
+	 * Get the track URI.
+	 * 
+	 * @return the URI
+	 */
+	public String getURI() {
+		return this.uri;
+	}
+	
+	/**
 	 * Get an array of all the attributes of a track to convert to CSV.
 	 * 
 	 * @return the String array
 	 */
 	public String toCSV() {
 		return this.name + "\t" + this.album + "\t" + this.artistsToString() + "\t" + this.previewUrl + 
-				"\t" + this.duration + "\t" + this.popularity + "\t" + this.id;
+				"\t" + this.uri + "\t" + this.duration + "\t" + this.popularity + "\t" + this.id;
 	}
 
 	/**
@@ -201,5 +213,18 @@ public class Track {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	/**
+	 * Compare 2 tracks by the popularity.
+	 * 
+	 * @param otherTrack
+	 * @return the comparison int.
+	 */
+	@Override
+	public int compareTo(Track otherTrack) {
+		Integer currPop = this.getPopularity();
+		Integer otherPop = otherTrack.getPopularity();
+		return otherPop.compareTo(currPop);
 	}
 }
